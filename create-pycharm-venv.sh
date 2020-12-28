@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo ">>>> Exporting poetry requirements to requirements.txt"
-poetry export -f requirements.txt --dev --output requirements.txt
+poetry export -f requirements.txt --dev --without-hashes --output requirements.txt
 
 echo ">>>> Creating project venv"
 virtualenv -p python3.8 venv
