@@ -1,0 +1,4 @@
+Create scripts for the following:
+
+- PYTHONPATH=. alembic revision --autogenerate -m "Add some table"
+- PYTHONPATH=. alembic upgrade head
