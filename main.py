@@ -30,6 +30,7 @@ app.include_router(playground.router)
 
 app.include_router(wishlist.routes.router)
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}

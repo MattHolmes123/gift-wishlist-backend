@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def create_wishlist_item(db: Session, item: schemas.WishListItemCreate) -> models.WishListItem:
+def create_wishlist_item(
+    db: Session, item: schemas.WishListItemCreate
+) -> models.WishListItem:
     """Create a wishlist item.
 
     :param db: Database connection
@@ -30,10 +32,14 @@ def get_wishlist_item(db: Session, item_id: int) -> Optional[models.WishListItem
     :return: Wishlist item or none
     """
 
-    return db.query(models.WishListItem).filter(models.WishListItem.id == item_id).first()
+    return (
+        db.query(models.WishListItem).filter(models.WishListItem.id == item_id).first()
+    )
 
 
-def update_wishlist_item(db: Session, item_id: int, item: schemas.WishListItemUpdate) -> Optional[models.WishListItem]:
+def update_wishlist_item(
+    db: Session, item_id: int, item: schemas.WishListItemUpdate
+) -> Optional[models.WishListItem]:
     """Update a wishlist item.
 
     :param db: Database connection
