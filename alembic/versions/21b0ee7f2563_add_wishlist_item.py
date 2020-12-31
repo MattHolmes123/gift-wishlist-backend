@@ -1,7 +1,7 @@
 """Add wishlist item
 
 Revision ID: 21b0ee7f2563
-Revises: 
+Revises:
 Create Date: 2020-12-31 07:42:44.424162
 
 """

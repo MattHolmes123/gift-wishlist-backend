@@ -12,7 +12,8 @@ class WishListItemCreate(WishListItemBase):
     pass
 
 
-class WishListItemUpdate(WishListItemBase):
+# Not inherited from WishListItemBase to get around MyPy warnings.
+class WishListItemUpdate(BaseModel):
     name: Optional[str]
     url: Optional[HttpUrl]
 

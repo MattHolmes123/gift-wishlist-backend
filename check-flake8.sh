@@ -1,3 +1,3 @@
 #!/bin/bash
 
-poetry run flake8 main.py
+poetry run flake8 .

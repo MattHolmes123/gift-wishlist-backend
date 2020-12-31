@@ -1,3 +1,5 @@
+"""Main file to setup app and include all routes."""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -33,4 +35,9 @@ app.include_router(wishlist.routes.router)
 
 @app.get("/")
 async def root():
+    """Sample route, need to remove.
+
+    :return: Sample data
+    """
+
     return {"message": "Hello World"}
