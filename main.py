@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers import playground
 
+import wishlist.routes
+
 app = FastAPI()
 
 origins = [
@@ -26,6 +28,7 @@ app.add_middleware(
 # This isn't a real router, its just to get used to fast api
 app.include_router(playground.router)
 
+app.include_router(wishlist.routes.router)
 
 @app.get("/")
 async def root():
