@@ -1,18 +1,8 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
-from database.db import SessionLocal
+from database.db import get_db
 from . import schemas, crud
-
-
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 router = APIRouter(prefix="/wishlist", tags=["wishlist"])
 

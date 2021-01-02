@@ -1,40 +1,12 @@
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from fastapi import status
+from fastapi.testclient import TestClient
 
-from database.db import Base
 from app.main import app
-from wishlist.routes import get_db
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./tests/test.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-Base.metadata.create_all(bind=engine)
-
-
-def override_get_db():
-    db = TestingSessionLocal()
-
-    try:
-        yield db
-
-    finally:
-        db.close()
-
-
-app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
 
-def test_create_get_and_update_wishlist_item():
-
+def test_create_get_and_update_wishlist_item(test_db):
     # Test CREATE
     response = client.post(
         "/wishlist/items/",
@@ -71,7 +43,7 @@ def test_create_get_and_update_wishlist_item():
     assert data["id"] == item_id
 
 
-def test_unknown_item_returns_correct_status():
+def test_unknown_item_returns_correct_status(test_db):
     response = client.get("/wishlist/items/999")
 
     assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
@@ -86,6 +58,6 @@ def test_unknown_item_returns_correct_status():
     assert data["detail"] == "Wish list item not found"
 
 
-def test_put_validation():
+def test_put_validation(test_db):
     response = client.put("/wishlist/items/999")
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY, response.text
