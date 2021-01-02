@@ -14,7 +14,7 @@ pydantic = {extras = ["dotenv"], version = "^1.7.3"}
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
-coverage = "^5.3.1"
+coverage = {extras = ["toml"], version = "^5.3.1"}
 mypy = "^0.790"
 flake8 = "^3.8.4"
 pylint = "^2.6.0"
@@ -32,3 +32,24 @@ disable = "C0330, C0326"
 
 [tool.pylint.format]
 max-line-length = "88"
+
+# https://docs.pytest.org/en/stable/customize.html#pyproject-toml
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+
+# https://coverage.readthedocs.io/en/coverage-5.3/config.html?highlight=pyproject#configuration-reference
+[tool.coverage.run]
+source = [
+    "database/",
+    "routers/",
+    "wishlist/"
+]
+omit = [
+    "database/check-migrations.py", # called when running dev server.
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true

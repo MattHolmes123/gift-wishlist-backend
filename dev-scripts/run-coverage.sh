@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Should be run from root of project.
-# e.g.
-# ./dev-scripts/run-tests.sh
+# to ensure the settings.environment setting is set to test
 
 echo "Removing test database"
 rm tests/test.db
@@ -11,5 +9,7 @@ rm tests/test.db
 echo "Setting environment variables"
 export ENVIRONMENT="test"
 
-echo "running tests"
-poetry run pytest
+echo "running tests with coverage"
+poetry run coverage run -m pytest
+
+poetry run coverage report
