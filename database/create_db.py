@@ -4,6 +4,7 @@ from alembic.config import Config
 from database.db import Base, engine
 
 
+# this isn't used currently.
 def create_local_database():
     # inside of a "create the database" script, first create
     # tables:
