@@ -136,5 +136,5 @@ my-notes.md
 
 # Project files
 sql_app.db
-test.db
+tests/test.db
 setup/docker/volumes/

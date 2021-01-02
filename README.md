@@ -17,9 +17,11 @@ This is to allow tools like pycharm to use the venv as the project interpreter.
 - Run the local uvicorn web server: `./run-dev-server.sh`
 
 ## Tools
-- Run the tests (written using pytest): `./run-tests.sh`
-- Run all linting tools: `./check-all.sh`
-- Format python code: `./black-format.sh`
+See `dev-scripts` folder for several scripts.  
+Some examples shown below:
+- Run the tests (written using pytest): `./dev-scripts/run-tests.sh`
+- Run all linting tools: `./dev-scripts/check-all.sh`
+- Format python code: `./dev-scripts/format-black.sh`
 
 ## Database Migration tool:
 Database migrations are handled using alembic, ensure they are run before starting dev server.  
