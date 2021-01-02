@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "gift-wishlist-backend"
 version = "0.1.0"
-description = ""
+description = "Rest API for wishlist application"
 authors = ["Matthew Holmes <matt_holmes123@hotmail.com>"]
 
 [tool.poetry.dependencies]
@@ -21,6 +21,7 @@ pylint = "^2.6.0"
 pytest = "^6.2.1"
 requests = "^2.25.1"
 # TODO: Resolve how to add this as a production dependency
+# Read this: https://python-poetry.org/docs/pyproject/#extras
 psycopg2-binary = "^2.8.6"
 
 [build-system]

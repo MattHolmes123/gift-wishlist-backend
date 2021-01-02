@@ -1,5 +1,7 @@
 # gift-wishlist-backend
-Rest API backend for gift-wishlist application
+Rest API backend for gift-wishlist application  
+
+[![Tests Status](https://github.com/MattHolmes123/gift-wishlist-backend/workflows/Build/badge.svg?branch=main&event=push)](https://github.com/MattHolmes123/gift-wishlist-backend/actions?query=workflow%3ABuild+branch%3Amain+event%3Apush)
 
 ## Project Dependencies
 - Poetry: https://python-poetry.org/docs/#installation
