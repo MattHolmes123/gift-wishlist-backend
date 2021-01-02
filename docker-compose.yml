@@ -1,0 +1,14 @@
+version: "3.8"
+
+# File to setup local development environment
+services:
+  db:
+    image: postgres:13.1
+    ports:
+      - 5432:5432
+    volumes:
+      - ./setup/docker/volumes/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

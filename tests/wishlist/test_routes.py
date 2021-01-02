@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from fastapi import status
 
 from database.db import Base
-from main import app
+from app.main import app
 from wishlist.routes import get_db
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
