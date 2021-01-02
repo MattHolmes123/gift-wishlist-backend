@@ -4,4 +4,4 @@
 # e.g.
 # ./dev-scripts/check-flake8.sh
 
-poetry run flake8 .
+poetry run flake8 --count .
