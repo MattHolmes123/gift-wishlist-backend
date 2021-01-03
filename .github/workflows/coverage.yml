@@ -1,0 +1,35 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ add-coverage-action ]
+
+jobs:
+  coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.8]
+        poetry-version: [1.1.4]
+        os: [ubuntu-18.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+
+      - name: install project dependencies
+        run: |
+          poetry install
+          poetry add --dev pytest-cov
+
+      - name: Test with pytest
+        run: |
+          export ENVIRONMENT="test"
+          poetry run pytest --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
