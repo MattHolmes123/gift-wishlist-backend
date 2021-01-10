@@ -4,7 +4,7 @@ from alembic import config
 from alembic import script
 from alembic.runtime import migration
 
-from settings import settings
+from app.core.config import settings
 
 
 def check():

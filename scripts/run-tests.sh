@@ -2,7 +2,7 @@
 
 # Should be run from root of project.
 # e.g.
-# ./dev-scripts/run-tests.sh
+# ./scripts/run-tests.sh
 
 echo "Removing test database"
 rm tests/test.db

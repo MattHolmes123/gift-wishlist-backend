@@ -7,15 +7,15 @@ NO_COLOR='\033[0m'
 # set -e
 
 printf "%bRunning Black checks%b\n" "$BLUE" "$NO_COLOR"
-./dev-scripts/check-black.sh
+./scripts/check-black.sh
 
 printf "%bRunning flake8 checks%b\n" "$BLUE" "$NO_COLOR"
-./dev-scripts/check-flake8.sh
+./scripts/check-flake8.sh
 
 printf "%bRunning pylint checks%b\n" "$BLUE" "$NO_COLOR"
-./dev-scripts/check-pylint.sh
+./scripts/check-pylint.sh
 
 printf "%bRunning mypy checks%b\n" "$BLUE" "$NO_COLOR"
-./dev-scripts/check-mypy.sh
+./scripts/check-mypy.sh
 
 printf "%bAll tests finished%b\n" "$BLUE" "$NO_COLOR"

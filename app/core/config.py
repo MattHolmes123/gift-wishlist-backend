@@ -21,9 +21,10 @@ class ProjectSettings(BaseSettings):
     # This is optional as when testing this environment variable is not set.
     pg_dsn: Optional[PostgresDsn]
     environment: Literal["local", "test", "production"]
+    secret_key: str
 
     # Project settings not from environment
-    test_db_url: str = "sqlite:///./tests/test.db"
+    test_db_url: str = "sqlite:///./app/tests/test.db"
 
     @property
     def running_tests(self) -> bool:

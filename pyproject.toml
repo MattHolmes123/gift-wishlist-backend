@@ -37,18 +37,18 @@ max-line-length = "88"
 # https://docs.pytest.org/en/stable/customize.html#pyproject-toml
 [tool.pytest.ini_options]
 testpaths = [
-    "tests",
+    "app/tests",
 ]
 
 # https://coverage.readthedocs.io/en/coverage-5.3/config.html?highlight=pyproject#configuration-reference
 [tool.coverage.run]
 source = [
-    "database/",
-    "routers/",
-    "wishlist/"
+    "app/database/",
+    "app/routers/",
+    "app/wishlist/"
 ]
 omit = [
-    "database/check-migrations.py", # called when running dev server.
+    "app/database/check-migrations.py", # called when running dev server.
 ]
 
 [tool.coverage.report]
