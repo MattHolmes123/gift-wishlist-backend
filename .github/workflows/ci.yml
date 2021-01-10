@@ -32,16 +32,16 @@ jobs:
           poetry install
 
       - name: Lint black
-        run: ./dev-scripts/check-black.sh
+        run: ./scripts/check-black.sh
 
       - name: Lint flake 8
-        run: ./dev-scripts/check-flake8.sh
+        run: ./scripts/check-flake8.sh
 
       - name: Check Mypy
-        run: ./dev-scripts/check-mypy.sh
+        run: ./scripts/check-mypy.sh
 
 # Commented out for now
 #      - name: Check Pylint
-#        run: ./dev-scripts/check-pylint.sh
+#        run: ./scripts/check-pylint.sh
       - name: Run tests
-        run: ./dev-scripts/run-tests.sh
+        run: ./scripts/run-tests.sh

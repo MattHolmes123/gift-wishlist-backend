@@ -5,10 +5,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import database.db
-import wishlist.models  # Imported so it found my models
+import app.database.db
+import app.wishlist.models
 
-from settings import settings
+from app.core.config import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,7 +20,7 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-target_metadata = database.db.Base.metadata
+target_metadata = app.database.db.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

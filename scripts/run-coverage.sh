@@ -3,7 +3,7 @@
 # to ensure the settings.environment setting is set to test
 
 echo "Removing test database"
-rm tests/test.db
+rm app/tests/test.db
 
 # to ensure the settings.environment setting is set to test
 echo "Setting environment variables"

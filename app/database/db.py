@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 
-from settings import settings
+from app.core.config import settings
 
 db_url = settings.test_db_url if settings.running_tests else settings.pg_dsn
 connect_args = {"check_same_thread": False} if settings.running_tests else {}

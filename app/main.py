@@ -3,9 +3,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import playground
+from app.routers import playground
 
-import wishlist.routes
+from app.wishlist.routes import router as wishlist_router
 
 app = FastAPI()
 
@@ -29,8 +29,7 @@ app.add_middleware(
 
 # This isn't a real router, its just to get used to fast api
 app.include_router(playground.router)
-
-app.include_router(wishlist.routes.router)
+app.include_router(wishlist_router)
 
 
 @app.get("/")

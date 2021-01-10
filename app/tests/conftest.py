@@ -1,6 +1,6 @@
 import pytest
 
-from database.db import Base, engine
+from app.database.db import Base, engine
 
 
 # TODO: Improve this, for now it works.

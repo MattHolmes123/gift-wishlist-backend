@@ -8,7 +8,8 @@ Rest API backend for gift-wishlist application
 - Docker: https://docs.docker.com/engine/install/
 
 Once the above dependencies have been installed run the following:   
-`./setup-local.sh`  
+`./scripts/run-setup-local.sh`
+
 This creates a virtual environment using poetry located in the project root `.venv` directory.  
 This is to allow tools like pycharm to use the venv as the project interpreter.
 
@@ -16,14 +17,15 @@ This is to allow tools like pycharm to use the venv as the project interpreter.
 ## Local deployment:
 - Run the database database: `docker-compose -f docker-compose.yml up`
 - If this is the first time running the migrations should now be applied (See "Run migrations" below)
-- Run the local uvicorn web server: `./run-dev-server.sh`
+- Run the local uvicorn web server: `./scripts/run-dev-server.sh`
 
 ## Tools
-See `dev-scripts` folder for several scripts.  
+See `scripts` folder for several scripts.
+
 Some examples shown below:
-- Run the tests (written using pytest): `./dev-scripts/run-tests.sh`
-- Run all linting tools: `./dev-scripts/check-all.sh`
-- Format python code: `./dev-scripts/format-black.sh`
+- Run the tests (written using pytest): `./scripts/run-tests.sh`
+- Run all linting tools: `./scripts/check-all.sh`
+- Format python code: `./scripts/format-black.sh`
 
 ## Database Migration tool:
 Database migrations are handled using alembic, ensure they are run before starting dev server.  

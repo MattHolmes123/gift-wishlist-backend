@@ -5,7 +5,7 @@ set -e
 
 . ./.venv/bin/activate
 # Check alembic migrations
-PYTHONPATH=.  python3 ./database/check-migrations.py
+PYTHONPATH=.  python3 ./app/database/check-migrations.py
 
 # TODO: Work out how to setup paths correctly with poetry
 # poetry run ./database/check-migrations.py

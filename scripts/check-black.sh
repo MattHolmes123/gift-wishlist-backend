@@ -2,6 +2,6 @@
 
 # Should be run from root of project.
 # e.g.
-# ./dev-scripts/format-black.sh
+# ./scripts/check-black.sh
 
-poetry run black .
+poetry run black --check ./app

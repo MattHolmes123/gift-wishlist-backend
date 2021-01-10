@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
-from database.db import get_db
+from app.database.db import get_db
 from . import schemas, crud
 
 router = APIRouter(prefix="/wishlist", tags=["wishlist"])
