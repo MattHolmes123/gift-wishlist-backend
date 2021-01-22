@@ -7,6 +7,7 @@ from alembic import context
 
 import app.database.db
 import app.wishlist.models
+import app.models
 
 from app.core.config import settings
 
