@@ -3,7 +3,12 @@ from app.core.config import settings
 from app.database.db import SessionLocal, Session
 
 
-def create_initial_superuser(db: Session):
+def create_initial_superuser(db: Session) -> None:
+    """Create a super user account.
+
+    :param db: Database connection
+    :return: None
+    """
 
     env_variables_needed = ["FIRST_SUPERUSER", "FIRST_SUPERUSER_PASSWORD"]
     e_vars = ", ".join(env_variables_needed)

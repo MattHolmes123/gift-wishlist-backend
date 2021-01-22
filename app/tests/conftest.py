@@ -1,6 +1,13 @@
 import pytest
+from fastapi.testclient import TestClient
 
 from app.database.db import Base, engine
+from app.main import app
+
+
+@pytest.fixture(scope="session")
+def client():
+    return TestClient(app)
 
 
 # TODO: Improve this, for now it works.

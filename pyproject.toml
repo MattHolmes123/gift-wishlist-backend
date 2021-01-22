@@ -46,9 +46,15 @@ testpaths = [
 # https://coverage.readthedocs.io/en/coverage-5.3/config.html?highlight=pyproject#configuration-reference
 [tool.coverage.run]
 source = [
+    "app/api/",
+    "app/core/",
+    "app/crud/",
     "app/database/",
+    "app/models/",
     "app/routers/",
-    "app/wishlist/"
+    "app/schemas/",
+    "app/wishlist/",
+    "app/main.py",
 ]
 omit = [
     "app/database/check-migrations.py", # called when running dev server.
