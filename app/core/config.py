@@ -1,9 +1,6 @@
 from typing import Literal, Optional
 
-from pydantic import (
-    BaseSettings,
-    PostgresDsn,
-)
+from pydantic import BaseSettings, PostgresDsn, EmailStr
 
 
 class ProjectSettings(BaseSettings):
@@ -23,8 +20,15 @@ class ProjectSettings(BaseSettings):
     environment: Literal["local", "test", "production"]
     secret_key: str
 
+    # Needed to create other users
+    first_superuser: Optional[EmailStr]
+    first_superuser_password: Optional[str]
+
     # Project settings not from environment
     test_db_url: str = "sqlite:///./app/tests/test.db"
+    api_v1_str: str = "/api/v1"
+    access_token_expire_minutes: int = 60 * 24 * 8
+    users_open_registration: bool = False
 
     @property
     def running_tests(self) -> bool:
