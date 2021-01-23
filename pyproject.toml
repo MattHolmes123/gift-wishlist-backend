@@ -58,6 +58,7 @@ source = [
 ]
 omit = [
     "app/database/check-migrations.py", # called when running dev server.
+    "app/database/create_superuser.py",
 ]
 
 [tool.coverage.report]

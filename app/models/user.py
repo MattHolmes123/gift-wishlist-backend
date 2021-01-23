@@ -1,16 +1,15 @@
-from typing import TYPE_CHECKING
-
 from sqlalchemy import Boolean, Column, Integer, String
 
 # TODO create a baseclass file
 # from app.db.base_class import Base
 from app.database.db import Base
 
+
 # Add back in when refactoring Wishlish app
 # from sqlalchemy.orm import relationship
 
-if TYPE_CHECKING:
-    from app.wishlist.models import WishListItem  # noqa: F401
+# if TYPE_CHECKING:
+#     from app.wishlist.models import WishListItem  # noqa: F401
 
 
 class User(Base):

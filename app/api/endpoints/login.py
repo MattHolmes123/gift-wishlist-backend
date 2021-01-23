@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -8,7 +7,6 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core import security
-from app.core.config import settings
 
 # from app.utils import (
 #     generate_password_reset_token,
@@ -16,10 +14,10 @@ from app.core.config import settings
 #     verify_password_reset_token,
 # )
 
-router = APIRouter(tags=["login"])
+router = APIRouter(tags=["login"], prefix="/login")
 
 
-@router.post("/login/access-token", response_model=schemas.Token)
+@router.post("/access-token", response_model=schemas.Token)
 def login_access_token(
     db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
@@ -29,24 +27,21 @@ def login_access_token(
         db, email=form_data.username, password=form_data.password
     )
 
-    # TODO: change detail for both to simply say "Can't login" or something and be a HTTP_401_UNAUTHORIZED
+    # TODO: change detail for both to simply say "Can't login" or something and
+    # be a HTTP_401_UNAUTHORIZED
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
     elif not crud.user.is_active(user):
         raise HTTPException(status_code=400, detail="Inactive user")
 
-    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
-
     return {
-        "access_token": security.create_access_token(
-            user.id, expires_delta=access_token_expires
-        ),
+        "access_token": security.create_access_token(user.id),
         "token_type": "bearer",
     }
 
 
-@router.post("/login/test-token", response_model=schemas.User)
+@router.post("/test-token", response_model=schemas.User)
 def test_token(current_user: models.User = Depends(deps.get_current_user)) -> Any:
     """Test access token"""
 
