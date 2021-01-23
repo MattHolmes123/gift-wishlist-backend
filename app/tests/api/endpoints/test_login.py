@@ -8,14 +8,29 @@ if TYPE_CHECKING:
     from fastapi.testclient import TestClient
 
 
+URL_PREFIX: str = f"{settings.api_v1_str}/login"
+
+
+# TODO: Import the urls from the modules rather than TestUrls
 class TestUrls:
-    get_login_token: str = f"{settings.api_v1_str}/login/access-token"
-    test_token: str = f"{settings.api_v1_str}/login/test-token"
+    get_login_token: str = f"{URL_PREFIX}/access-token"
+    test_token: str = f"{URL_PREFIX}/test-token"
 
 
-def test_get_login_token(client: "TestClient", superuser: "User"):
+def test_get_login_token_as_superuser(client: "TestClient", superuser: "User"):
     # login_user has its own assertions
     login_user(client, superuser, "superuserpassword")
+
+
+def test_get_login_token_with_valid_user_but_invalid_password(
+    client: "TestClient", superuser: "User"
+):
+    response = client.post(
+        TestUrls.get_login_token,
+        data={"username": superuser.email, "password": "Incorrect Password"},
+    )
+
+    assert response.status_code == 400
 
 
 def test_get_login_token_with_inactive_user(

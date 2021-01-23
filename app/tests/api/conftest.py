@@ -4,7 +4,7 @@ import pytest
 
 from app import crud
 from app.database.db import SessionLocal
-from app.schemas.user import UserCreate, UserUpdate
+from app.schemas.user import UserCreate
 
 if TYPE_CHECKING:
     from app.models.user import User
