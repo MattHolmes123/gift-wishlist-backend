@@ -8,8 +8,11 @@ Rest API backend for gift-wishlist application
 - Docker: https://docs.docker.com/engine/install/
 
 Once the above dependencies have been installed run the following:   
-`./scripts/run-setup-local.sh`
+- Create `.env` file  
+`./scripts/create-environment-variables.sh`
 
+- Setup project venv  
+`./scripts/run-setup-local.sh`  
 This creates a virtual environment using poetry located in the project root `.venv` directory.  
 This is to allow tools like pycharm to use the venv as the project interpreter.
 
