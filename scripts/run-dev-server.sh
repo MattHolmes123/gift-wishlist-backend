@@ -12,8 +12,4 @@ PYTHONPATH=.  python3 ./app/database/check-migrations.py
 deactivate
 
 echo "starting uvicorn"
-poetry run uvicorn app.main:app --reload --port 8081 \
-  --reload-dir ./app \
-  --reload-dir ./database \
-  --reload-dir ./routers \
-  --reload-dir ./wishlist
+poetry run uvicorn app.main:app --reload --port 8081 --reload-dir ./app
