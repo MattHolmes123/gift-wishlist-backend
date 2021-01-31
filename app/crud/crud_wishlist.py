@@ -1,5 +1,6 @@
 from app.models.wishlist import WishListItem
 from app.schemas.wishlist import WishListItemCreate, WishListItemUpdate
+
 from .base import CRUDBase
 
 

@@ -40,6 +40,9 @@ jobs:
       - name: Check Mypy
         run: ./scripts/check-mypy.sh
 
+      - name: Lint isort
+        run: ./scripts/check-isort.sh
+
 # Commented out for now
 #      - name: Check Pylint
 #        run: ./scripts/check-pylint.sh

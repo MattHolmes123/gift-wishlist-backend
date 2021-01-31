@@ -1,6 +1,6 @@
 from typing import Literal, Optional
 
-from pydantic import BaseSettings, PostgresDsn, EmailStr
+from pydantic import BaseSettings, EmailStr, PostgresDsn
 
 
 class ProjectSettings(BaseSettings):

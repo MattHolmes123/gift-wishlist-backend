@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING
 
 from fastapi import status
 
-from app import crud
-from app import schemas
+from app import crud, schemas
 from app.core.config import settings
-from app.tests.api.utils import login_user, BearerAuth
+from app.tests.api.utils import BearerAuth, login_user
 
 if TYPE_CHECKING:
     from fastapi.testclient import TestClient
+
     from app.models import User
 
 

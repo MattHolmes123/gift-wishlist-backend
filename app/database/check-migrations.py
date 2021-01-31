@@ -1,9 +1,7 @@
 import sqlalchemy
 
-from alembic import config
-from alembic import script
+from alembic import config, script
 from alembic.runtime import migration
-
 from app.core.config import settings
 
 

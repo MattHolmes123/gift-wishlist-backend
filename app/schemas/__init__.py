@@ -4,6 +4,6 @@ from .user import User, UserCreate, UserInDB, UserUpdate
 from .wishlist import (
     WishListItem,
     WishListItemCreate,
-    WishListItemUpdate,
     WishListItemInDB,
+    WishListItemUpdate,
 )

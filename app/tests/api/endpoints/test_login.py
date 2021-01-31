@@ -4,8 +4,9 @@ from app.core.config import settings
 from app.tests.api.utils import login_user
 
 if TYPE_CHECKING:
-    from app.models.user import User
     from fastapi.testclient import TestClient
+
+    from app.models.user import User
 
 
 URL_PREFIX: str = f"{settings.api_v1_str}/login"

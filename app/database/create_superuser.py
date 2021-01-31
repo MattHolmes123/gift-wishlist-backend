@@ -1,6 +1,6 @@
 from app import crud, schemas
 from app.core.config import settings
-from app.database.db import SessionLocal, Session
+from app.database.db import Session, SessionLocal
 
 
 def create_initial_superuser(db: Session) -> None:

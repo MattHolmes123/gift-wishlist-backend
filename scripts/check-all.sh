@@ -9,6 +9,9 @@ NO_COLOR='\033[0m'
 printf "%bRunning Black checks%b\n" "$BLUE" "$NO_COLOR"
 ./scripts/check-black.sh
 
+printf "%bRunning isort checks%b\n" "$BLUE" "$NO_COLOR"
+./scripts/check-isort.sh
+
 printf "%bRunning flake8 checks%b\n" "$BLUE" "$NO_COLOR"
 ./scripts/check-flake8.sh
 
