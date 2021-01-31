@@ -3,9 +3,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import playground
-
 from app.api.api import api_router
+from app.routers import playground
 
 app = FastAPI()
 

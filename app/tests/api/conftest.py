@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from app.models.user import User
     from fastapi.testclient import TestClient
 
-from .utils import login_user, BearerAuth
+from .utils import BearerAuth, login_user
 
 
 @pytest.fixture()

@@ -7,6 +7,7 @@ from app.core.config import settings
 
 if TYPE_CHECKING:
     from fastapi.testclient import TestClient
+
     from app.models.user import User
 
 

@@ -1,13 +1,9 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app import crud
 from app.database.db import get_db
-from app.schemas import (
-    WishListItem,
-    WishListItemCreate,
-    WishListItemUpdate,
-)
+from app.schemas import WishListItem, WishListItemCreate, WishListItemUpdate
 
 router = APIRouter(prefix="/wishlist", tags=["wishlist"])
 
