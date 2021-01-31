@@ -1,15 +1,9 @@
 from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.orm import relationship
 
 # TODO create a baseclass file
 # from app.db.base_class import Base
 from app.database.db import Base
-
-
-# Add back in when refactoring Wishlish app
-# from sqlalchemy.orm import relationship
-
-# if TYPE_CHECKING:
-#     from app.wishlist.models import WishListItem  # noqa: F401
 
 
 class User(Base):
@@ -21,7 +15,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     # relationships
-    # items = relationship("WishlistItem", back_populates="user")
+    items = relationship(
+        "app.models.wishlist.WishListItem", back_populates="user", cascade="all, delete"
+    )
 
     # columns
     full_name = Column(String, index=True)

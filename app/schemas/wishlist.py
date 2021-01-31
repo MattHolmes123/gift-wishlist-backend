@@ -13,6 +13,7 @@ class WishListItemBase(BaseModel):
 class WishListItemCreate(WishListItemBase):
     name: str
     url: HttpUrl
+    user_id: int
 
 
 # Properties to receive via API on update
@@ -22,6 +23,7 @@ class WishListItemUpdate(WishListItemBase):
 
 class WishListItemInDBBase(WishListItemBase):
     id: Optional[int] = None
+    user_id: int
 
     class Config:
         orm_mode = True

@@ -1,9 +1,7 @@
-from sqlalchemy import Column, Integer, String  # , ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.database.db import Base
-
-# TODO: Add back in when refactoring wishlist app
-# from sqlalchemy.orm import relationship
 
 
 class WishListItem(Base):
@@ -13,10 +11,10 @@ class WishListItem(Base):
 
     # keys
     id = Column(Integer, primary_key=True, index=True)
-    # user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
     # relationships
-    # user = relationship("User", back_populates="items")
+    user = relationship("app.models.user.User", back_populates="items")
 
     # columns
     name = Column(String, nullable=False)

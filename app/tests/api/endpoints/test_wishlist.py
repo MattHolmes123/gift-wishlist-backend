@@ -22,11 +22,15 @@ class TestUrls:
         return f"{URL_PREFIX}/items/{pk}"
 
 
-def test_create_get_and_update_wishlist_item(test_db):
+def test_create_get_and_update_wishlist_item(test_db, active_user):
     # Test CREATE
     response = client.post(
         TestUrls.create_items,
-        json={"name": "Boots", "url": "https://i-want-some-boots.com"},
+        json={
+            "name": "Boots",
+            "url": "https://i-want-some-boots.com",
+            "user_id": active_user.id,
+        },
     )
 
     assert response.status_code == 200, response.text
