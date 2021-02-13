@@ -5,6 +5,15 @@ from alembic.runtime import migration
 from app.core.config import settings
 
 
+def main():
+    """Script entry point
+
+    :return: None
+    """
+
+    check()
+
+
 def check():
     """Check if all the migrations have been ran
 
@@ -27,4 +36,4 @@ def check():
 
 
 if __name__ == "__main__":
-    check()
+    main()
