@@ -4,4 +4,8 @@
 # e.g.
 # ./scripts/format-black.sh
 
-poetry run black ./app
+source $(poetry env info --path)/bin/activate
+
+black ./app
+
+deactivate
