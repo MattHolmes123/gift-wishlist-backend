@@ -5,7 +5,7 @@ description = "Rest API for wishlist application"
 authors = ["Matthew Holmes <matt_holmes123@hotmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 fastapi = "^0.63.0"
 uvicorn = {extras = ["standard"], version = "^0.13.2"}
 SQLAlchemy = "^1.3.22"
@@ -28,8 +28,9 @@ requests = "^2.25.1"
 psycopg2-binary = "^2.8.6"
 isort = "^5.7.0"
 
-# TODO: Come back to this when it works
-# [tool.poetry.scripts]
+[tool.poetry.scripts]
+check-migrations = "app.database.check_migrations:main"
+create-superuser = "app.database.create_superuser:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -61,7 +62,7 @@ source = [
     "app/main.py",
 ]
 omit = [
-    "app/database/check-migrations.py", # called when running dev server.
+    "app/database/check_migrations.py", # called when running dev server.
     "app/database/create_superuser.py",
 ]
 

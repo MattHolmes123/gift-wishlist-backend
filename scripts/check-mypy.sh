@@ -4,4 +4,8 @@
 # e.g.
 # ./scripts/check-mypy.sh
 
-poetry run mypy --ignore-missing-imports --allow-untyped-globals "$@" ./app
+source $(poetry env info --path)/bin/activate
+
+mypy --ignore-missing-imports --allow-untyped-globals "$@" ./app
+
+deactivate

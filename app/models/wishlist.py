@@ -19,3 +19,13 @@ class WishListItem(Base):
     # columns
     name = Column(String, nullable=False)
     url = Column(String, nullable=False)
+
+    def __str__(self):
+        return (
+            f"WishListItem("
+            f"id={self.id!r}, "
+            f"user_id={self.user_id!r}, "
+            f"name={self.name!r}, "
+            f"url={self.url!r}, "
+            f")"
+        )

@@ -6,4 +6,8 @@
 
 echo "Add --diff for detailed output"
 
-poetry run isort app --check-only
+source $(poetry env info --path)/bin/activate
+
+isort app --check-only
+
+deactivate

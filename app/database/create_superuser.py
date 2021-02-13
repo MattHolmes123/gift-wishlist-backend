@@ -3,6 +3,16 @@ from app.core.config import settings
 from app.database.db import Session, SessionLocal
 
 
+def main():
+    """Script entrypoint
+
+    :return: None
+    """
+
+    session = SessionLocal()
+    create_initial_superuser(session)
+
+
 def create_initial_superuser(db: Session) -> None:
     """Create a super user account.
 
@@ -32,5 +42,4 @@ def create_initial_superuser(db: Session) -> None:
 
 
 if __name__ == "__main__":
-    session = SessionLocal()
-    create_initial_superuser(session)
+    main()
