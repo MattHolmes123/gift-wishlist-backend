@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 from .utils import BearerAuth, login_user
 
 
+# TODO: Make session scope so I can log people in
 @pytest.fixture()
 def db(test_db):
     """Gets the database session
@@ -54,7 +55,7 @@ def super_auth(client: "TestClient", superuser: "User") -> BearerAuth:
     """Login a superuser and return a request BearerAuth to be used in tests.
 
     :param client: Test Client
-    :param superuser: An superuser model
+    :param superuser: A superuser model
     :return: Requests Bearer Auth class
     """
 
@@ -126,6 +127,19 @@ def inactive_user(db) -> "User":
     )
 
     return crud.user.create(db, obj_in=user_in)
+
+
+@pytest.fixture()
+def all_users_created(db, superuser, active_user, inactive_user) -> None:
+    """Ensures all users have been created.
+
+    :param db: Database connection
+    :param superuser: Superuser user model
+    :param active_user: Active user model
+    :param inactive_user: Inactive  user model
+    :return: None
+    """
+    ...
 
 
 @pytest.fixture()

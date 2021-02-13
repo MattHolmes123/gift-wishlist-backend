@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, HttpUrl
 
@@ -37,3 +37,13 @@ class WishListItem(WishListItemInDBBase):
 # Additional properties stored in DB
 class WishListItemInDB(WishListItemInDBBase):
     id: int
+
+
+WishListList = List[WishListItemInDB]
+
+# TODO: Use this later when we want pagination (if ever)
+# class WishListList(BaseModel):
+# results = List[WishListItemInDB]
+# next: HttpUrl()
+# previous: HttpUrl()
+# count: int

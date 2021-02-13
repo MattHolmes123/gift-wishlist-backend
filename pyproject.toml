@@ -47,6 +47,7 @@ max-line-length = "88"
 testpaths = [
     "app/tests",
 ]
+addopts = "--maxfail=2 -rf"
 
 # https://coverage.readthedocs.io/en/coverage-5.3/config.html?highlight=pyproject#configuration-reference
 [tool.coverage.run]

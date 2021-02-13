@@ -6,4 +6,5 @@ from .wishlist import (
     WishListItemCreate,
     WishListItemInDB,
     WishListItemUpdate,
+    WishListList,
 )

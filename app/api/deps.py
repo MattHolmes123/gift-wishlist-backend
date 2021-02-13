@@ -55,3 +55,17 @@ def get_current_active_superuser(
             status_code=400, detail="The user doesn't have enough privileges"
         )
     return current_user
+
+
+class ListQueryParams:
+    """Common query parameters for list endpoints"""
+
+    def __init__(self, limit: int = 100, skip: int = 0):
+        """
+
+        :param limit: How many records to return
+        :param skip: How many records to skip
+        """
+
+        self.limit = limit
+        self.skip = skip

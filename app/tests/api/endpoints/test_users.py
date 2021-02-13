@@ -30,7 +30,7 @@ class TestUrls:
         return f"{URL_PREFIX}/{pk}"
 
 
-def test_read_users(client: "TestClient", super_auth: "BearerAuth"):
+def test_read_users(client: "TestClient", all_users_created, super_auth: "BearerAuth"):
 
     response = client.get(TestUrls.get_users, auth=super_auth)
 
@@ -38,33 +38,25 @@ def test_read_users(client: "TestClient", super_auth: "BearerAuth"):
 
     actual = response.json()
 
-    actual = sorted(actual, key=lambda x: x["id"])
+    assert len(actual) == 3
 
-    expected = [
-        {
-            "email": "superuser@email.com",
-            "is_active": True,
-            "is_superuser": True,
-            "full_name": "Super User",
-            "id": 1,
-        },
-        {
-            "email": "inactive_user@email.com",
-            "is_active": False,
-            "is_superuser": False,
-            "full_name": "Inactive User",
-            "id": 2,
-        },
-        {
-            "email": "active_user@email.com",
-            "is_active": True,
-            "is_superuser": False,
-            "full_name": "Active User",
-            "id": 3,
-        },
-    ]
+    # Sort by name and check they are correct
+    returned_users = sorted(actual, key=lambda x: x["full_name"])
+    active_user = returned_users[0]
+    inactive_user = returned_users[1]
+    super_user = returned_users[2]
 
-    assert actual == expected
+    assert active_user["email"] == "active_user@email.com"
+    assert inactive_user["email"] == "inactive_user@email.com"
+    assert super_user["email"] == "superuser@email.com"
+
+    # Now check keys returned
+    expected_keys = sorted(["email", "is_active", "is_superuser", "full_name", "id"])
+
+    for user in returned_users:
+        user_attributes = sorted(user.keys())
+
+        assert user_attributes == expected_keys
 
 
 def test_read_users_not_authorised(client: "TestClient", active_auth: "BearerAuth"):
@@ -222,6 +214,9 @@ def test_update_user(client: "TestClient", super_auth: "BearerAuth", active_user
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["id"] == active_user.id
+
+    # Reset password until tests are isolated.
+    client.put(url, auth=super_auth, json={"password": "activeuserpassword"})
 
 
 def test_update_user_invalid_user(client: "TestClient", super_auth: "BearerAuth"):

@@ -26,6 +26,6 @@ class WishListItem(Base):
             f"id={self.id!r}, "
             f"user_id={self.user_id!r}, "
             f"name={self.name!r}, "
-            f"url={self.url!r}, "
+            f"url={self.url!r}"
             f")"
         )

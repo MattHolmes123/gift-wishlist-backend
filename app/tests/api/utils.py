@@ -40,10 +40,9 @@ def login_user(client: "TestClient", user: "User", password: str) -> schemas.Tok
     url = f"{settings.api_v1_str}/login/access-token"
 
     response = client.post(url, data={"username": user.email, "password": password})
-
-    assert response.status_code == 200
-
     data = response.json()
+
+    assert response.status_code == 200, f"Unexpected response: {data}"
 
     assert data["token_type"] == "bearer"
     assert data["access_token"]
