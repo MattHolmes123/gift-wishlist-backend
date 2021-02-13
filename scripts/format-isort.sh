@@ -2,4 +2,8 @@
 # e.g.
 # ./scripts/format-isort.sh
 
-poetry run isort app
+source $(poetry env info --path)/bin/activate
+
+isort app
+
+deactivate

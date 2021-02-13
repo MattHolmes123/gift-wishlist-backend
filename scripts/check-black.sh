@@ -4,4 +4,8 @@
 # e.g.
 # ./scripts/check-black.sh
 
-poetry run black --check ./app
+source $(poetry env info --path)/bin/activate
+
+black --check ./app
+
+deactivate

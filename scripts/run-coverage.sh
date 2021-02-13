@@ -2,6 +2,8 @@
 
 # to ensure the settings.environment setting is set to test
 
+source $(poetry env info --path)/bin/activate
+
 echo "Removing test database"
 rm app/tests/test.db
 
@@ -10,6 +12,8 @@ echo "Setting environment variables"
 export ENVIRONMENT="test"
 
 echo "running tests with coverage"
-poetry run coverage run -m pytest
+coverage run -m pytest
 
-poetry run coverage report
+coverage report
+
+deactivate

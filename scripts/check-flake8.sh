@@ -4,4 +4,8 @@
 # e.g.
 # ./scripts/check-flake8.sh
 
-poetry run flake8 --count ./app
+source $(poetry env info --path)/bin/activate
+
+flake8 --count ./app
+
+deactivate

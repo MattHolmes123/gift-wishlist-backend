@@ -4,8 +4,12 @@
 # e.g.
 # ./scripts/check-pylint.sh
 
-poetry run pylint -j 4 \
+source $(poetry env info --path)/bin/activate
+
+pylint -j 4 \
     app/database \
     app/routers \
     app/tests  \
     app/wishlist
+
+deactivate
