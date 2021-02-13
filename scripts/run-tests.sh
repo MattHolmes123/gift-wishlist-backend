@@ -13,4 +13,6 @@ export SECRET_KEY="test-secret-key"
 export ENVIRONMENT="test"
 
 echo "running tests"
-poetry run pytest
+
+# TODO: Remove disable warnings flag
+poetry run pytest --disable-warnings "$@"
