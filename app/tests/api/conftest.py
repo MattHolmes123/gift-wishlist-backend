@@ -1,3 +1,4 @@
+import dataclasses
 from typing import TYPE_CHECKING
 
 import pytest
@@ -15,7 +16,7 @@ from app.main import app
 from .utils import BearerAuth, login_user
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="package", autouse=True)
 def db(package_db: "TestDatabase"):
     """Gets the database session
 
@@ -28,7 +29,7 @@ def db(package_db: "TestDatabase"):
     return package_db.get_db()
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="package", autouse=True)
 def super_auth(db, client: "TestClient") -> BearerAuth:
     """Login a superuser and return a request BearerAuth to be used in tests.
 
@@ -44,7 +45,7 @@ def super_auth(db, client: "TestClient") -> BearerAuth:
     return bearer_auth
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="package", autouse=True)
 def active_auth(db, client: "TestClient") -> BearerAuth:
     """Login an active test user and return a request BearerAuth to be used in tests.
 
@@ -58,6 +59,25 @@ def active_auth(db, client: "TestClient") -> BearerAuth:
     bearer_auth = BearerAuth(login_data.access_token)
 
     return bearer_auth
+
+
+@pytest.fixture(scope="package", autouse=True)
+def invalid_auth() -> BearerAuth:
+    return BearerAuth("totally-made-up-and-invalid")
+
+
+@dataclasses.dataclass()
+class UserTokens:
+    superuser: BearerAuth
+    active_user: BearerAuth
+    inactive_user: BearerAuth
+
+
+@pytest.fixture(scope="package", autouse=True)
+def tokens(super_auth, active_auth, invalid_auth) -> UserTokens:
+    return UserTokens(
+        superuser=super_auth, active_user=active_auth, inactive_user=invalid_auth
+    )
 
 
 @pytest.fixture()
@@ -99,8 +119,3 @@ def _get_user(db, email):
     assert user
 
     return user
-
-
-@pytest.fixture()
-def invalid_auth() -> BearerAuth:
-    return BearerAuth("totally-made-up-and-invalid")
