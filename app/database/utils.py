@@ -1,15 +1,11 @@
-from typing import TYPE_CHECKING
-
 from sqlalchemy import create_engine
+from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
 
-if TYPE_CHECKING:
-    from sqlalchemy.engine.base import Engine
 
-
-def create_app_engine(url: str = None) -> "Engine":
+def create_app_engine(url: str = None) -> Engine:
     if url is None:
         url = settings.test_db_url if settings.running_tests else settings.pg_dsn
 

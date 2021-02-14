@@ -59,7 +59,6 @@ source = [
     "app/models/",
     "app/routers/",
     "app/schemas/",
-    "app/wishlist/",
     "app/main.py",
 ]
 omit = [

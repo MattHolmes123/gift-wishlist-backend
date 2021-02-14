@@ -1,6 +1,7 @@
 import pathlib
 import shutil
 import tempfile
+from dataclasses import dataclass
 
 import pytest
 from fastapi.testclient import TestClient
@@ -9,7 +10,7 @@ from app import crud
 from app.core.config import settings
 from app.database.db import Base
 from app.main import app
-from app.schemas.user import UserCreate
+from app.schemas.user import TestUser, UserCreate
 
 from .db_utils import TestDatabase
 
@@ -57,38 +58,49 @@ def function_db() -> TestDatabase:
     return _get_clean_database()
 
 
+@dataclass()
+class Users:
+    superuser: TestUser
+    active_user: TestUser
+    inactive_user: TestUser
+
+    def __iter__(self):
+        return iter([self.superuser, self.active_user, self.inactive_user])
+
+
+TestUsers = Users(
+    superuser=TestUser(
+        email="superuser@email.com",
+        password="superuserpassword",
+        is_superuser=True,
+        full_name="Super User",
+    ),
+    active_user=TestUser(
+        email="active_user@email.com",
+        password="activeuserpassword",
+        full_name="Active User",
+    ),
+    inactive_user=TestUser(
+        email="inactive_user@email.com",
+        password="inactiveuserpassword",
+        full_name="Inactive User",
+        is_active=False,
+    ),
+)
+
+
 def _setup_test_data(test_db: TestDatabase) -> None:
     """Populate the database with users that all tests can use.
 
     :return: None
     """
 
-    superuser = UserCreate(
-        email="superuser@email.com",
-        password="superuserpassword",
-        is_superuser=True,
-        full_name="Super User",
-    )
-
-    active_user = UserCreate(
-        email="active_user@email.com",
-        password="activeuserpassword",
-        full_name="Active User",
-    )
-
-    inactive_user = UserCreate(
-        email="inactive_user@email.com",
-        password="inactiveuserpassword",
-        full_name="Inactive User",
-        is_active=False,
-    )
-
-    users_in = [superuser, active_user, inactive_user]
-
     db = test_db.get_db()
 
-    for user_in in users_in:
-        crud.user.create(db, obj_in=user_in)
+    for user_in in TestUsers:
+        obj_in = UserCreate(**user_in.dict())
+        user = crud.user.create(db, obj_in=obj_in)
+        user_in.id = user.id
 
 
 def _create_clean_copy() -> None:
@@ -128,41 +140,3 @@ def _get_clean_database() -> TestDatabase:
         tmp_db_url = settings.get_db_url("module_db.db")
 
         return TestDatabase(url=tmp_db_url)
-
-# TODO: Decide what I want this to be...
-# TODO: Something to store users and remember their authentication details....
-# TODO: Needs to be easy to use in tests and fixtures
-# TODO: Also need to call `get_db` function correctly.
-
-# from app.schemas.user import UserCreate
-#
-# class TestUser(BaseModel):
-#     full_name: str
-#     email: str
-#     password: str
-#     is_superuser: bool = False
-#     is_inactive: bool = False
-
-# @dataclass()
-# class Users:
-#     superuser: UserCreate
-#     active_user: UserCreate
-#     inactive_user: UserCreate
-#
-#     @staticmethod
-#     def get_user(full_name, email, password, *, is_superuser=False, is_active=True) -> UserCreate:
-#         return UserCreate(
-#             full_name=full_name,
-#             email=email,
-#             password=password,
-#             is_superuser=is_superuser,
-#             is_active=is_active,
-#         )
-#
-# @pytest.fixture(scope="session")
-# def users() -> Users:
-#     return Users(
-#         superuser=Users.get_user("Super User", "superuser@email.com", "superuserpassword", is_superuser=True),
-#         active_user=Users.get_user("Active User", "active_user@email.com", "activeuserpassword"),
-#         inactive_user=Users.get_user("Inactive User", "inactive_user@email.com", "inactiveuserpassword", is_active=False),
-#     )

@@ -38,3 +38,9 @@ class User(UserInDBBase):
 class UserInDB(UserInDBBase):
     id: int
     hashed_password: str
+
+
+# Used when testing
+class TestUser(User):
+    email: EmailStr
+    password: str

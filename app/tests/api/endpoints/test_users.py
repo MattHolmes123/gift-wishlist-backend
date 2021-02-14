@@ -5,11 +5,13 @@ from fastapi import status
 from app import crud, schemas
 from app.core.config import settings
 from app.tests.api.utils import BearerAuth, login_user
+from app.tests.conftest import TestUsers
 
 if TYPE_CHECKING:
     from fastapi.testclient import TestClient
 
     from app.models import User
+    from app.tests.api.conftest import UserTokens
 
 
 URL_PREFIX: str = f"{settings.api_v1_str}/users"
@@ -30,9 +32,9 @@ class TestUrls:
         return f"{URL_PREFIX}/{pk}"
 
 
-def test_read_users(client: "TestClient", super_auth: "BearerAuth"):
+def test_read_users(client: "TestClient", tokens: "UserTokens"):
 
-    response = client.get(TestUrls.get_users, auth=super_auth)
+    response = client.get(TestUrls.get_users, auth=tokens.superuser)
 
     assert response.status_code == 200
 
@@ -59,26 +61,26 @@ def test_read_users(client: "TestClient", super_auth: "BearerAuth"):
         assert user_attributes == expected_keys
 
 
-def test_read_users_not_authorised(client: "TestClient", active_auth: "BearerAuth"):
-    response = client.get(TestUrls.get_users, auth=active_auth)
+def test_read_users_not_authorised(client: "TestClient", tokens: "UserTokens"):
+    response = client.get(TestUrls.get_users, auth=tokens.active_user)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_create_user_successful(client: "TestClient", super_auth: "BearerAuth"):
+def test_create_user_successful(client: "TestClient", tokens: "UserTokens"):
 
     new_user = schemas.user.UserCreate(email="newuser@email.com", password="password")
 
-    response = client.post(TestUrls.create_user, auth=super_auth, json=new_user.dict())
+    response = client.post(
+        TestUrls.create_user, auth=tokens.superuser, json=new_user.dict()
+    )
 
     assert response.status_code == status.HTTP_201_CREATED
 
 
-def test_create_existing_user(
-    client: "TestClient", super_auth: "BearerAuth", active_user: "User"
-):
+def test_create_existing_user(client: "TestClient", super_auth: "BearerAuth"):
     new_user = schemas.user.UserCreate(
-        email=active_user.email, password="activeuserpassword"
+        email=TestUsers.active_user.email, password="activeuserpassword"
     )
 
     response = client.post(TestUrls.create_user, auth=super_auth, json=new_user.dict())
@@ -86,19 +88,14 @@ def test_create_existing_user(
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_can_update_self(
-    client: "TestClient", active_auth: "BearerAuth", active_user: "User"
-):
+def test_can_update_self(client: "TestClient", tokens: "UserTokens"):
 
     new_email = "updated_active_user@email.com"
     new_name = "Updated Active User"
 
-    old_email = active_user.email
-    old_name = active_user.full_name
-
     response = client.put(
         TestUrls.update_user_me,
-        auth=active_auth,
+        auth=tokens.active_user,
         json={"password": "new-password", "full_name": new_name, "email": new_email},
     )
 
@@ -106,45 +103,43 @@ def test_can_update_self(
 
     actual = response.json()
 
-    assert actual["id"] == active_user.id
+    assert actual["id"] == TestUsers.active_user.id
     assert actual["is_active"]
     assert not actual["is_superuser"]
 
     assert actual["email"] == new_email
     assert actual["full_name"] == new_name
 
-    # FIXME: Reset until tests can be isolated
+    # TODO: Reset until tests can be isolated
     response = client.put(
         TestUrls.update_user_me,
-        auth=active_auth,
+        auth=tokens.active_user,
         json={
-            "password": "activeuserpassword",
-            "full_name": old_name,
-            "email": old_email,
+            "password": TestUsers.active_user.password,
+            "full_name": TestUsers.active_user.full_name,
+            "email": TestUsers.active_user.email,
         },
     )
 
 
-def test_read_user_me(
-    client: "TestClient", active_auth: "BearerAuth", active_user: "User"
-):
+def test_read_user_me(client: "TestClient", tokens: "UserTokens"):
 
-    response = client.get(TestUrls.get_user_me, auth=active_auth)
+    response = client.get(TestUrls.get_user_me, auth=tokens.active_user)
 
     assert response.status_code == status.HTTP_200_OK
 
     actual = response.json()
 
-    assert actual["id"] == active_user.id
+    assert actual["id"] == TestUsers.active_user.id
     assert actual["is_active"]
     assert not actual["is_superuser"]
 
-    assert actual["email"] == active_user.email
-    assert actual["full_name"] == active_user.full_name
+    assert actual["email"] == TestUsers.active_user.email
+    assert actual["full_name"] == TestUsers.active_user.full_name
 
 
 def test_read_user_me_inactive(
-    client: "TestClient", active_auth: "BearerAuth", active_user: "User", db
+    client: "TestClient", tokens: "UserTokens", active_user: "User", db
 ):
 
     # User is marked as inactive before getting user details.
@@ -154,7 +149,7 @@ def test_read_user_me_inactive(
         obj_in=schemas.user.UserUpdate(is_active=False).dict(exclude_unset=True),
     )
 
-    response = client.get(TestUrls.get_user_me, auth=active_auth)
+    response = client.get(TestUrls.get_user_me, auth=tokens.active_user)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -189,53 +184,46 @@ def test_read_user_me_deleted_user(client: "TestClient", db):
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_read_user_by_id_successful(
-    client: "TestClient",
-    super_auth: "BearerAuth",
-    active_user: "User",
-    superuser: "User",
-):
+def test_read_user_by_id_successful(client: "TestClient", tokens: "UserTokens"):
 
-    url = TestUrls.read_user_by_id(active_user.id)
+    url = TestUrls.read_user_by_id(TestUsers.active_user.id)
 
-    response = client.get(url, auth=super_auth)
+    response = client.get(url, auth=tokens.superuser)
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["id"] == active_user.id
+    assert response.json()["id"] == TestUsers.active_user.id
 
     # test self
-    url = TestUrls.read_user_by_id(superuser.id)
-    response = client.get(url, auth=super_auth)
+    url = TestUrls.read_user_by_id(TestUsers.superuser.id)
+    response = client.get(url, auth=tokens.superuser)
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["id"] == superuser.id
+    assert response.json()["id"] == TestUsers.superuser.id
 
 
-def test_read_user_by_id_forbidden(
-    client: "TestClient", active_auth: "BearerAuth", superuser: "User"
-):
-    url = TestUrls.read_user_by_id(superuser.id)
+def test_read_user_by_id_forbidden(client: "TestClient", tokens: "UserTokens"):
+    url = TestUrls.read_user_by_id(TestUsers.superuser.id)
 
-    response = client.get(url, auth=active_auth)
+    response = client.get(url, auth=tokens.active_user)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_update_user(client: "TestClient", super_auth: "BearerAuth", active_user):
-    url = TestUrls.update_user(active_user.id)
+def test_update_user(client: "TestClient", tokens: "UserTokens"):
+    url = TestUrls.update_user(TestUsers.active_user.id)
 
-    response = client.put(url, auth=super_auth, json={"password": "new_password"})
+    response = client.put(url, auth=tokens.superuser, json={"password": "new_password"})
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["id"] == active_user.id
+    assert response.json()["id"] == TestUsers.active_user.id
 
-    # FIXME: Reset password until tests are isolated.
-    client.put(url, auth=super_auth, json={"password": "activeuserpassword"})
+    # TODO: Reset password until tests are isolated.
+    client.put(url, auth=tokens.superuser, json={"password": "activeuserpassword"})
 
 
-def test_update_user_invalid_user(client: "TestClient", super_auth: "BearerAuth"):
+def test_update_user_invalid_user(client: "TestClient", tokens: "UserTokens"):
     url = TestUrls.update_user(9999)
 
-    response = client.put(url, auth=super_auth, json={"password": "new_password"})
+    response = client.put(url, auth=tokens.superuser, json={"password": "new_password"})
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
