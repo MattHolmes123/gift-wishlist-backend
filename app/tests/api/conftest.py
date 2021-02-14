@@ -3,31 +3,61 @@ from typing import TYPE_CHECKING
 import pytest
 
 from app import crud
-from app.database.db import SessionLocal
-from app.schemas.user import UserCreate
 
 if TYPE_CHECKING:
     from app.models.user import User
     from fastapi.testclient import TestClient
     from ..conftest import TestDatabase
 
+from app.api.deps import get_db
+from app.main import app
+
 from .utils import BearerAuth, login_user
 
-from app.main import app
-from app.api.deps import get_db
 
-
-@pytest.fixture()
-def db(module_db: "TestDatabase"):
+@pytest.fixture(scope="package")
+def db(package_db: "TestDatabase"):
     """Gets the database session
 
-    :param module_db: clean database session class
+    :param package_db: clean database session class
     :return: Database session
     """
 
-    app.dependency_overrides[get_db] = module_db
+    app.dependency_overrides[get_db] = package_db
 
-    return module_db.get_db()
+    return package_db.get_db()
+
+
+@pytest.fixture(scope="package")
+def super_auth(db, client: "TestClient") -> BearerAuth:
+    """Login a superuser and return a request BearerAuth to be used in tests.
+
+    :param db: Database connection
+    :param client: Test Client
+    :return: Requests Bearer Auth class
+    """
+
+    login_data = login_user(client, "superuser@email.com", "superuserpassword")
+
+    bearer_auth = BearerAuth(login_data.access_token)
+
+    return bearer_auth
+
+
+@pytest.fixture(scope="package")
+def active_auth(db, client: "TestClient") -> BearerAuth:
+    """Login an active test user and return a request BearerAuth to be used in tests.
+
+    :param db: Database connection
+    :param client: Test Client
+    :return: Requests Bearer Auth class
+    """
+
+    login_data = login_user(client, "active_user@email.com", "activeuserpassword")
+
+    bearer_auth = BearerAuth(login_data.access_token)
+
+    return bearer_auth
 
 
 @pytest.fixture()
@@ -38,37 +68,7 @@ def superuser(db) -> "User":
     :return: Super User model
     """
 
-    superuser_email = "superuser@email.com"
-
-    user = crud.user.get_by_email(db, email=superuser_email)
-
-    if user:
-        return user
-
-    user_in = UserCreate(
-        email="superuser@email.com",
-        password="superuserpassword",
-        is_superuser=True,
-        full_name="Super User",
-    )
-
-    return crud.user.create(db, obj_in=user_in)
-
-
-@pytest.fixture()
-def super_auth(client: "TestClient", superuser: "User") -> BearerAuth:
-    """Login a superuser and return a request BearerAuth to be used in tests.
-
-    :param client: Test Client
-    :param superuser: A superuser model
-    :return: Requests Bearer Auth class
-    """
-
-    login_data = login_user(client, superuser, "superuserpassword")
-
-    bearer_auth = BearerAuth(login_data.access_token)
-
-    return bearer_auth
+    return _get_user(db, "superuser@email.com")
 
 
 @pytest.fixture()
@@ -79,34 +79,7 @@ def active_user(db) -> "User":
     :return: Active user model
     """
 
-    active_user_email = "active_user@email.com"
-
-    user = crud.user.get_by_email(db, email=active_user_email)
-
-    if user:
-        return user
-
-    user_in = UserCreate(
-        email=active_user_email, password="activeuserpassword", full_name="Active User"
-    )
-
-    return crud.user.create(db, obj_in=user_in)
-
-
-@pytest.fixture()
-def active_auth(client: "TestClient", active_user: "User") -> BearerAuth:
-    """Login an active test user and return a request BearerAuth to be used in tests.
-
-    :param client: Test Client
-    :param active_user: An active user model
-    :return: Requests Bearer Auth class
-    """
-
-    login_data = login_user(client, active_user, "activeuserpassword")
-
-    bearer_auth = BearerAuth(login_data.access_token)
-
-    return bearer_auth
+    return _get_user(db, "active_user@email.com")
 
 
 @pytest.fixture()
@@ -117,34 +90,15 @@ def inactive_user(db) -> "User":
     :return: Active user model
     """
 
-    inactive_user_email = "inactive_user@email.com"
-
-    user = crud.user.get_by_email(db, email=inactive_user_email)
-
-    if user:
-        return user
-
-    user_in = UserCreate(
-        email=inactive_user_email,
-        password="inactiveuserpassword",
-        full_name="Inactive User",
-        is_active=False,
-    )
-
-    return crud.user.create(db, obj_in=user_in)
+    return _get_user(db, "inactive_user@email.com")
 
 
-@pytest.fixture()
-def all_users_created(db, superuser, active_user, inactive_user) -> None:
-    """Ensures all users have been created.
+def _get_user(db, email):
+    user = crud.user.get_by_email(db, email=email)
 
-    :param db: Database connection
-    :param superuser: Superuser user model
-    :param active_user: Active user model
-    :param inactive_user: Inactive  user model
-    :return: None
-    """
-    ...
+    assert user
+
+    return user
 
 
 @pytest.fixture()

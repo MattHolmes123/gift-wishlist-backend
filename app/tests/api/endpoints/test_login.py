@@ -20,7 +20,7 @@ class TestUrls:
 
 def test_get_login_token_as_superuser(client: "TestClient", superuser: "User"):
     # login_user has its own assertions
-    login_user(client, superuser, "superuserpassword")
+    login_user(client, superuser.email, "superuserpassword")
 
 
 def test_get_login_token_with_valid_user_but_invalid_password(

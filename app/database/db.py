@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
-from .utils import create_session, create_app_engine
+from .utils import create_app_engine, create_session
 
 # What all models derive from
 Base = declarative_base()

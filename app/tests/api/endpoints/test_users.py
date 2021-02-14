@@ -30,7 +30,7 @@ class TestUrls:
         return f"{URL_PREFIX}/{pk}"
 
 
-def test_read_users(client: "TestClient", all_users_created, super_auth: "BearerAuth"):
+def test_read_users(client: "TestClient", super_auth: "BearerAuth"):
 
     response = client.get(TestUrls.get_users, auth=super_auth)
 
@@ -93,6 +93,9 @@ def test_can_update_self(
     new_email = "updated_active_user@email.com"
     new_name = "Updated Active User"
 
+    old_email = active_user.email
+    old_name = active_user.full_name
+
     response = client.put(
         TestUrls.update_user_me,
         auth=active_auth,
@@ -109,6 +112,17 @@ def test_can_update_self(
 
     assert actual["email"] == new_email
     assert actual["full_name"] == new_name
+
+    # FIXME: Reset until tests can be isolated
+    response = client.put(
+        TestUrls.update_user_me,
+        auth=active_auth,
+        json={
+            "password": "activeuserpassword",
+            "full_name": old_name,
+            "email": old_email,
+        },
+    )
 
 
 def test_read_user_me(
@@ -164,7 +178,7 @@ def test_read_user_me_deleted_user(client: "TestClient", db):
 
         user = crud.user.create(db, obj_in=user_in)
 
-    login_data = login_user(client, user, password)
+    login_data = login_user(client, user.email, password)
     bearer_auth = BearerAuth(login_data.access_token)
 
     # Now the user is deleted after we have the login information
@@ -215,7 +229,7 @@ def test_update_user(client: "TestClient", super_auth: "BearerAuth", active_user
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["id"] == active_user.id
 
-    # Reset password until tests are isolated.
+    # FIXME: Reset password until tests are isolated.
     client.put(url, auth=super_auth, json={"password": "activeuserpassword"})
 
 
