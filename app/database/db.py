@@ -1,17 +1,14 @@
-from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
-from app.core.config import settings
+from .utils import create_session, create_app_engine
 
-db_url = settings.test_db_url if settings.running_tests else settings.pg_dsn
-connect_args = {"check_same_thread": False} if settings.running_tests else {}
-
-engine = create_engine(db_url, connect_args=connect_args)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+# What all models derive from
 Base = declarative_base()
+
+# The database connection
+engine = create_app_engine()
+SessionLocal = create_session(engine)
 
 
 def get_db() -> Session:

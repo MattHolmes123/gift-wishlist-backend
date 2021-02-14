@@ -9,20 +9,25 @@ from app.schemas.user import UserCreate
 if TYPE_CHECKING:
     from app.models.user import User
     from fastapi.testclient import TestClient
+    from ..conftest import TestDatabase
 
 from .utils import BearerAuth, login_user
 
+from app.main import app
+from app.api.deps import get_db
 
-# TODO: Make session scope so I can log people in
+
 @pytest.fixture()
-def db(test_db):
+def db(module_db: "TestDatabase"):
     """Gets the database session
 
-    :param test_db: Ensure the database tables exist
+    :param module_db: clean database session class
     :return: Database session
     """
 
-    return SessionLocal()
+    app.dependency_overrides[get_db] = module_db
+
+    return module_db.get_db()
 
 
 @pytest.fixture()

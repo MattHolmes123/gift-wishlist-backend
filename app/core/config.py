@@ -25,7 +25,9 @@ class ProjectSettings(BaseSettings):
     first_superuser_password: Optional[str]
 
     # Project settings not from environment
-    test_db_url: str = "sqlite:///./app/tests/test.db"
+    test_db_path: str = "./app/tests/"
+    test_db_name: str = "test.db"
+
     api_v1_str: str = "/api/v1"
     access_token_expire_minutes: int = 60 * 24 * 8
     users_open_registration: bool = False
@@ -33,6 +35,20 @@ class ProjectSettings(BaseSettings):
     @property
     def running_tests(self) -> bool:
         return self.environment == "test"
+
+    @property
+    def test_db_url(self):
+
+        return self.get_db_url(self.test_db_name)
+
+    def get_db_url(self, name):
+        """returns a db url using the name and test db path.
+
+        :param name: database name
+        :return: db url
+        """
+
+        return f"sqlite:///{self.test_db_path}{name}"
 
 
 settings: ProjectSettings = ProjectSettings()
