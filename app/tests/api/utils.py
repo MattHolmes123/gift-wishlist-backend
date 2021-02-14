@@ -28,18 +28,18 @@ class BearerAuth(AuthBase):
         return r
 
 
-def login_user(client: "TestClient", user: "User", password: str) -> schemas.Token:
+def login_user(client: "TestClient", email: str, password: str) -> schemas.Token:
     """Log in the user.
 
     :param client: Test client
-    :param user: User model
+    :param email: User email
     :param password: User password
     :return: Login data
     """
 
     url = f"{settings.api_v1_str}/login/access-token"
 
-    response = client.post(url, data={"username": user.email, "password": password})
+    response = client.post(url, data={"username": email, "password": password})
     data = response.json()
 
     assert response.status_code == 200, f"Unexpected response: {data}"

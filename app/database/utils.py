@@ -1,10 +1,9 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
-
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.base import Engine

@@ -16,4 +16,5 @@ export ENVIRONMENT="test"
 echo "running tests"
 
 # TODO: Remove disable warnings flag
+echo "add --log-cli-level INFO and use logging.info() for useful debugging"
 poetry run pytest --disable-warnings "$@"

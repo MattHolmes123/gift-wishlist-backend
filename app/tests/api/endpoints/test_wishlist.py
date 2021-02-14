@@ -78,7 +78,9 @@ def test_unknown_item_returns_correct_status(db, active_auth):
     assert data["detail"] == "Wish list item not found"
 
     unknown_update_url = TestUrls.update_item(999)
-    response = client.put(unknown_update_url, auth=active_auth, json={"name": "Unknown boots"})
+    response = client.put(
+        unknown_update_url, auth=active_auth, json={"name": "Unknown boots"}
+    )
 
     assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
     data = response.json()
