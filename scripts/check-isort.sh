@@ -4,6 +4,8 @@
 # e.g.
 # ./scripts/check-isort.sh
 
+set -e
+
 echo "Add --diff for detailed output"
 
 source $(poetry env info --path)/bin/activate
