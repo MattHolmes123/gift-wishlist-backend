@@ -43,8 +43,5 @@ jobs:
       - name: Lint isort
         run: ./scripts/check-isort.sh
 
-# Commented out for now
-#      - name: Check Pylint
-#        run: ./scripts/check-pylint.sh
       - name: Run tests
         run: ./scripts/run-tests.sh
