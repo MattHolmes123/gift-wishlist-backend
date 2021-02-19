@@ -186,6 +186,7 @@ def test_read_user_me_deleted_user(client: "TestClient", db):
 
 def test_read_user_by_id_successful(client: "TestClient", tokens: "UserTokens"):
 
+    assert TestUsers.active_user.id
     url = TestUrls.read_user_by_id(TestUsers.active_user.id)
 
     response = client.get(url, auth=tokens.superuser)
@@ -194,6 +195,7 @@ def test_read_user_by_id_successful(client: "TestClient", tokens: "UserTokens"):
     assert response.json()["id"] == TestUsers.active_user.id
 
     # test self
+    assert TestUsers.superuser.id
     url = TestUrls.read_user_by_id(TestUsers.superuser.id)
     response = client.get(url, auth=tokens.superuser)
 
@@ -202,6 +204,7 @@ def test_read_user_by_id_successful(client: "TestClient", tokens: "UserTokens"):
 
 
 def test_read_user_by_id_forbidden(client: "TestClient", tokens: "UserTokens"):
+    assert TestUsers.superuser.id
     url = TestUrls.read_user_by_id(TestUsers.superuser.id)
 
     response = client.get(url, auth=tokens.active_user)
@@ -210,6 +213,7 @@ def test_read_user_by_id_forbidden(client: "TestClient", tokens: "UserTokens"):
 
 
 def test_update_user(client: "TestClient", tokens: "UserTokens"):
+    assert TestUsers.active_user.id
     url = TestUrls.update_user(TestUsers.active_user.id)
 
     response = client.put(url, auth=tokens.superuser, json={"password": "new_password"})
