@@ -15,9 +15,6 @@ printf "%bRunning isort checks%b\n" "$BLUE" "$NO_COLOR"
 printf "%bRunning flake8 checks%b\n" "$BLUE" "$NO_COLOR"
 ./scripts/check-flake8.sh
 
-printf "%bRunning pylint checks%b\n" "$BLUE" "$NO_COLOR"
-./scripts/check-pylint.sh
-
 printf "%bRunning mypy checks%b\n" "$BLUE" "$NO_COLOR"
 ./scripts/check-mypy.sh
 

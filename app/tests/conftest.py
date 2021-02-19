@@ -1,3 +1,8 @@
+"""Root conftest file for pytest.
+
+Main purpose is to set the database up and create useful fixtures for all tests
+"""
+
 import pathlib
 import shutil
 import tempfile
@@ -16,7 +21,12 @@ from .db_utils import TestDatabase
 
 
 @pytest.fixture(scope="session", autouse=True)
-def client():
+def client() -> TestClient:
+    """Creates a test client
+
+    :return: Fast API test client fixture
+    """
+
     return TestClient(app)
 
 
@@ -40,26 +50,48 @@ def session_test_db():
 
 @pytest.fixture(scope="package")
 def package_db() -> TestDatabase:
+    """Database scoped to a python package.
+
+    :return: Test database
+    """
+
     return _get_clean_database()
 
 
 @pytest.fixture(scope="module")
 def module_db() -> TestDatabase:
+    """Database scoped to a python module.
+
+    :return: Test database
+    """
+
     return _get_clean_database()
 
 
 @pytest.fixture(scope="class")
 def class_db() -> TestDatabase:
+    """Database scoped to a python class.
+
+    :return: Test database
+    """
+
     return _get_clean_database()
 
 
 @pytest.fixture(scope="function")
 def function_db() -> TestDatabase:
+    """Database scoped to a python function.
+
+    :return: Test database
+    """
+
     return _get_clean_database()
 
 
 @dataclass()
 class Users:
+    """Test Users for tests."""
+
     superuser: TestUser
     active_user: TestUser
     inactive_user: TestUser
