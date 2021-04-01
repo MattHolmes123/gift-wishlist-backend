@@ -12,11 +12,15 @@ origins = [
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:8081",
+    "http://127.0.0.1",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8081",
 ]
 
-# Read this for more information:
+# Read these for more information:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 # https://fastapi.tiangolo.com/tutorial/cors/?h=+access+control+allow+origin
+# https://javascript.info/fetch-crossorigin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
