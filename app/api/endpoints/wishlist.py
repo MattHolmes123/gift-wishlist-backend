@@ -28,6 +28,11 @@ def get_all_wishlist_items(
     return items
 
 
+# TODO: are these endpoints to add?
+# get user id items
+# get self wishlist items
+
+
 @router.post("/items/", response_model=schemas.WishListItem)
 def create_wishlist_item(
     item: schemas.WishListItemCreate, db: Session = Depends(get_db)
