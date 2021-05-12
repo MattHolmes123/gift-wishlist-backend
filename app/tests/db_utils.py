@@ -1,3 +1,5 @@
+from typing import Iterator
+
 from sqlalchemy.orm import Session
 
 from app.database.db import create_app_engine, create_session, engine
@@ -11,7 +13,7 @@ class TestDatabase:
         self.engine = create_app_engine(url)
         self.session = create_session(engine)
 
-    def __call__(self) -> Session:
+    def __call__(self) -> Iterator[Session]:
         """This is how it is used as a dependency
 
         :return:

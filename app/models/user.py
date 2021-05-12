@@ -1,9 +1,14 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 
 # TODO create a baseclass file
 # from app.db.base_class import Base
 from app.database.db import Base
+
+if TYPE_CHECKING:
+    from app.models import WishListItem
 
 
 class User(Base):
@@ -12,19 +17,19 @@ class User(Base):
     __tablename__ = "user"
 
     # keys
-    id = Column(Integer, primary_key=True, index=True)
+    id: int = Column(Integer, primary_key=True, index=True)
 
     # relationships
-    items = relationship(
+    items: list["WishListItem"] = relationship(
         "app.models.wishlist.WishListItem", back_populates="user", cascade="all, delete"
     )
 
     # columns
     full_name = Column(String, index=True)
-    email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
-    is_active = Column(Boolean(), default=True)
-    is_superuser = Column(Boolean(), default=False)
+    email: str = Column(String, unique=True, index=True, nullable=False)
+    hashed_password: str = Column(String, nullable=False)
+    is_active: bool = Column(Boolean(), default=True)
+    is_superuser: bool = Column(Boolean(), default=False)
 
     def __str__(self):
         return (

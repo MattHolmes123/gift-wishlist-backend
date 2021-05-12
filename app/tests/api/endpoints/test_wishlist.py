@@ -3,10 +3,16 @@ from typing import TYPE_CHECKING
 from fastapi import status
 
 from app.core.config import settings
+from app.models.wishlist import WishListItem
 from app.tests.conftest import TestUsers
 
 if TYPE_CHECKING:
+    from fastapi.testclient import TestClient
+    from sqlalchemy.orm import Session
+
     from app.tests.api.conftest import UserTokens
+    from app.tests.api.utils import BearerAuth
+    from app.tests.conftest import TestUser
 
 
 URL_PREFIX: str = f"{settings.api_v1_str}/wishlist"
@@ -15,6 +21,7 @@ URL_PREFIX: str = f"{settings.api_v1_str}/wishlist"
 class TestUrls:
     all_items: str = f"{URL_PREFIX}/items/"
     create_items: str = f"{URL_PREFIX}/items/"
+    my_items: str = f"{URL_PREFIX}/items/me/"
 
     @staticmethod
     def get_item(pk) -> str:
@@ -97,19 +104,11 @@ def test_put_validation(client, db, tokens: "UserTokens"):
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY, response.text
 
 
-def test_get_items(client, db, tokens: "UserTokens"):
+def test_get_items(client: "TestClient", db, tokens: "UserTokens"):
 
     # A user creates several items
-    for item_id in range(5):
-        client.post(
-            TestUrls.create_items,
-            auth=tokens.active_user,
-            json={
-                "name": f"Item {item_id}",
-                "url": f"https://i-want-item-{item_id}.com",
-                "user_id": TestUsers.active_user.id,
-            },
-        )
+    total_items = 5
+    _create_user_items(client, tokens.active_user, TestUsers.active_user, total_items)
 
     # The superuser can view them all
     response = client.get(TestUrls.all_items, auth=tokens.superuser)
@@ -141,3 +140,48 @@ def test_get_items(client, db, tokens: "UserTokens"):
     three_limited_items = response.json()
 
     assert three_limited_items == next_three
+
+
+def test_user_can_view_own_items(
+    client: "TestClient", db: "Session", tokens: "UserTokens"
+):
+
+    # Create items for the admin user
+    admin_items = 2
+    _create_user_items(client, tokens.superuser, TestUsers.superuser, admin_items)
+
+    # Delete all active user items
+    db.query(WishListItem).filter_by(user_id=TestUsers.active_user.id).delete()
+    db.commit()
+
+    active_user_items = 3
+    _create_user_items(
+        client, tokens.active_user, TestUsers.active_user, active_user_items
+    )
+
+    response = client.get(TestUrls.my_items, auth=tokens.active_user)
+    assert response.status_code == status.HTTP_200_OK, response.text
+
+    items = response.json()
+
+    assert isinstance(items, list)
+    assert len(items) == active_user_items
+
+    for item in items:
+        assert item["user_id"] == TestUsers.active_user.id
+
+
+def _create_user_items(
+    client: "TestClient", user_auth: "BearerAuth", user: "TestUser", total_items: int
+) -> None:
+
+    for item_id in range(total_items):
+        client.post(
+            TestUrls.create_items,
+            auth=user_auth,
+            json={
+                "name": f"Item {item_id}",
+                "url": f"https://i-want-item-{item_id}.com",
+                "user_id": user.id,
+            },
+        )
