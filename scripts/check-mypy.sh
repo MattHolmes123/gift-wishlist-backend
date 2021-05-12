@@ -8,6 +8,6 @@ set -e
 
 source $(poetry env info --path)/bin/activate
 
-mypy --ignore-missing-imports --allow-untyped-globals "$@" ./app
+mypy --config-file mypy.ini "$@" app
 
 deactivate

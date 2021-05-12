@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database.db import Base
+
+if TYPE_CHECKING:
+    from app.models import User
 
 
 class WishListItem(Base):
@@ -14,7 +19,7 @@ class WishListItem(Base):
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
     # relationships
-    user = relationship("app.models.user.User", back_populates="items")
+    user: "User" = relationship("app.models.user.User", back_populates="items")
 
     # columns
     name = Column(String, nullable=False)

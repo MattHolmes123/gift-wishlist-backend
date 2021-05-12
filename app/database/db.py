@@ -1,3 +1,5 @@
+from typing import Iterator
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
@@ -11,7 +13,7 @@ engine = create_app_engine()
 SessionLocal = create_session(engine)
 
 
-def get_db() -> Session:
+def get_db() -> Iterator[Session]:
     """Yields a database connection.
 
     When running unit tests this is a sqlite db.

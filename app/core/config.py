@@ -37,11 +37,11 @@ class ProjectSettings(BaseSettings):
         return self.environment == "test"
 
     @property
-    def test_db_url(self):
+    def test_db_url(self) -> str:
 
         return self.get_db_url(self.test_db_name)
 
-    def get_db_url(self, name):
+    def get_db_url(self, name) -> str:
         """returns a db url using the name and test db path.
 
         :param name: database name
