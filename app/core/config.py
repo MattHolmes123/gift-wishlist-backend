@@ -25,7 +25,7 @@ class ProjectSettings(BaseSettings):
     first_superuser_password: Optional[str]
 
     # Project settings not from environment
-    test_db_path: str = "./app/tests/"
+    test_db_path: str = "./"
     test_db_name: str = "test.db"
 
     api_v1_str: str = "/api/v1"

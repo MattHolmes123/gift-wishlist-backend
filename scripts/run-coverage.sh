@@ -5,7 +5,8 @@
 source $(poetry env info --path)/bin/activate
 
 echo "Removing test database"
-rm app/tests/test.db
+rm test.db
+rm test-clean.db
 
 # to ensure the settings.environment setting is set to test
 echo "Setting environment variables"
