@@ -31,6 +31,10 @@ class TestUrls:
     def update_item(pk) -> str:
         return f"{URL_PREFIX}/items/{pk}"
 
+    @staticmethod
+    def user_wishlist_items(pk) -> str:
+        return f"{URL_PREFIX}/items/user/{pk}"
+
 
 def test_create_get_and_update_wishlist_item(client, db, tokens: "UserTokens"):
     # Test CREATE
@@ -151,8 +155,8 @@ def test_user_can_view_own_items(
     _create_user_items(client, tokens.superuser, TestUsers.superuser, admin_items)
 
     # Delete all active user items
-    db.query(WishListItem).filter_by(user_id=TestUsers.active_user.id).delete()
-    db.commit()
+    user_id = TestUsers.active_user.id
+    _delete_user_wishlist(db, user_id)
 
     active_user_items = 3
     _create_user_items(
@@ -169,6 +173,46 @@ def test_user_can_view_own_items(
 
     for item in items:
         assert item["user_id"] == TestUsers.active_user.id
+
+
+def test_get_user_wishlist(client: "TestClient", db: "Session", tokens: "UserTokens"):
+
+    # Delete all active user items
+    user_id = TestUsers.active_user.id
+    _delete_user_wishlist(db, user_id)
+
+    active_user_items = 3
+    _create_user_items(
+        client, tokens.active_user, TestUsers.active_user, active_user_items
+    )
+
+    # The superuser can view them all
+    response = client.get(TestUrls.user_wishlist_items(user_id), auth=tokens.superuser)
+    assert response.status_code == status.HTTP_200_OK
+
+    items = response.json()
+    assert isinstance(items, list)
+    assert len(items) == 3
+
+    # Test super user gets 404 with invalid user_id
+    response = client.get(TestUrls.user_wishlist_items(-999), auth=tokens.superuser)
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    # Permission tests (TODO: Define best way to test all permission across endpoints
+    response = client.get(
+        TestUrls.user_wishlist_items(user_id), auth=tokens.active_user
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    response = client.get(
+        TestUrls.user_wishlist_items(user_id), auth=tokens.inactive_user
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+def _delete_user_wishlist(db, user_id):
+    db.query(WishListItem).filter_by(user_id=user_id).delete()
+    db.commit()
 
 
 def _create_user_items(

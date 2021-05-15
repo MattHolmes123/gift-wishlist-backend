@@ -7,23 +7,51 @@ from app import crud, models, schemas
 from app.api import deps
 from app.database.db import get_db
 
-router = APIRouter(
+# Wishlist admin router and routes
+admin_router = APIRouter(
     prefix="/wishlist",
-    tags=["wishlist"],
-    dependencies=[Depends(deps.get_current_active_user)],
+    tags=["wishlist-admin"],
+    dependencies=[Depends(deps.get_current_active_superuser)],
 )
 
 
-@router.get("/items/", response_model=schemas.WishListList)
+@admin_router.get("/items/", response_model=schemas.WishListList)
 def get_all_wishlist_items(
     db: Session = Depends(get_db),
-    superuser: models.User = Depends(deps.get_current_active_superuser),
     list_qs: deps.ListQueryParams = Depends(),
 ) -> Any:
 
     items = crud.wishlist_item.get_multi(db, skip=list_qs.skip, limit=list_qs.limit)
 
     return items
+
+
+@admin_router.get("/items/user/{user_id}", response_model=schemas.WishListList)
+def get_all_user_wishlist_items(
+    user_id: int,
+    db: Session = Depends(get_db),
+    list_qs: deps.ListQueryParams = Depends(),
+):
+    user = crud.user.get(db, user_id)
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    items = crud.wishlist_item.get_user_wishlist(
+        db, user, skip=list_qs.skip, limit=list_qs.limit
+    )
+
+    return items
+
+
+# Wishlist router and routes
+router = APIRouter(
+    prefix="/wishlist",
+    tags=["wishlist"],
+    dependencies=[Depends(deps.get_current_active_user)],
+)
 
 
 @router.get("/items/me/", response_model=schemas.WishListList)
@@ -34,17 +62,10 @@ def get_my_wishlist(
 ) -> Any:
 
     items = crud.wishlist_item.get_user_wishlist(
-        db,
-        user,
-        skip=list_qs.skip,
-        limit=list_qs.limit,
+        db, user, skip=list_qs.skip, limit=list_qs.limit
     )
 
     return items
-
-
-# TODO: are these endpoints to add?
-# get "user-id" items (admin)
 
 
 @router.post("/items/", response_model=schemas.WishListItem)
