@@ -21,7 +21,7 @@ router = APIRouter(tags=["login"], prefix="/login")
 def login_access_token(
     db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
-    """OAuth2 compatible token login, get an access token for future requests"""
+    """OAuth2 compatible token login, get an access token for future requests."""
 
     user = crud.user.authenticate(
         db, email=form_data.username, password=form_data.password
@@ -43,7 +43,7 @@ def login_access_token(
 
 @router.post("/test-token", response_model=schemas.User)
 def test_token(current_user: models.User = Depends(deps.get_current_user)) -> Any:
-    """Test access token"""
+    """Test access token."""
 
     return current_user
 
@@ -67,7 +67,7 @@ def test_token(current_user: models.User = Depends(deps.get_current_user)) -> An
 #     return {"msg": "Password recovery email sent"}
 
 
-# @router.post("/reset-password/", response_model=schemas.Msg)
+# @router.post("/reset-password", response_model=schemas.Msg)
 # def reset_password(
 #     token: str = Body(...),
 #     new_password: str = Body(...),
