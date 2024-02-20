@@ -6,7 +6,7 @@ authors = ["Matthew Holmes <matt_holmes123@hotmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-fastapi = "^0.63.0"
+fastapi = "^0.109.1"
 uvicorn = {extras = ["standard"], version = "^0.13.2"}
 SQLAlchemy = {extras = ["mypy"], version = "^1.4.15"}
 alembic = "^1.4.3"
